@@ -1,0 +1,35 @@
+apply plugin: 'java'
+apply plugin: 'application'
+
+mainClassName = 'com.gmail.berndivader.heewhomee.HeeWhooMee'
+
+repositories {
+	mavenCentral()
+}
+
+configurations {
+    implemented
+    compile.extendsFrom(implemented)
+}
+
+dependencies {
+	implemented 'org.jsoup:jsoup:+'
+	implemented 'com.google.code.gson:gson:+'
+    implemented 'mysql:mysql-connector-java:8.0.15'
+    implemented ("net.dv8tion:JDA:+") {
+		exclude module: 'opus-java'
+	}
+	implemented 'org.slf4j:slf4j-simple:+' 
+}
+
+jar {
+    rootSpec.exclude('**/META-INF/*.SF','**/META-INF/*.RSA')
+    
+    manifest {
+        attributes 'Main-Class': mainClassName
+    }
+
+    from {
+        configurations.implemented.asFileTree.files.collect { zipTree(it) }
+    }
+}
