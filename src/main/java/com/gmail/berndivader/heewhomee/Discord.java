@@ -2,6 +2,7 @@ package com.gmail.berndivader.heewhomee;
 
 import java.util.EnumSet;
 
+import com.gmail.berndivader.heewhomee.ai.BotSession;
 import com.gmail.berndivader.heewhomee.database.DiscordRequest;
 
 import net.dv8tion.jda.api.JDA;
@@ -23,6 +24,8 @@ public class Discord {
 	public static Discord instance;
 	public static boolean connected=false;
 	private static int connectRetries=0;
+	
+	public BotSession aiSession;
 	
 	private final JDA jda;
 	private SelfUser selfUser;
@@ -59,13 +62,13 @@ public class Discord {
 		@Override
 		public void onMessageReceived(MessageReceivedEvent event) {
 			Message message=event.getMessage();
-			char test=message.getContentStripped().charAt(0);
-			if(test=='!') {
+			String content=message.getContentRaw();
+			char test=content.charAt(0);
+			if(test=='!'&&content.length()>1) {
 				Helper.executor.submit(new DiscordRequest(message,false));
 			} else if(test=='@'&&message.getMentions().getUsers().contains(selfUser)) {
 				Helper.executor.submit(new DiscordRequest(message,true));
 			}
-			
 		}
 		
 		@Override
@@ -98,6 +101,10 @@ public class Discord {
 				GatewayIntent.GUILD_MESSAGES,
 				GatewayIntent.MESSAGE_CONTENT
 			)).addEventListeners(new Listener()).setActivity(Activity.competing("is back again!")).build();
+		
+		if(HeeWhooMee.config.pandoraId!=null&&!HeeWhooMee.config.pandoraId.isEmpty()) {
+			aiSession=new BotSession(HeeWhooMee.config.pandoraId);
+		}
 	}
 	
 	public static void setActivity(String str) {

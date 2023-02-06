@@ -5,21 +5,37 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.concurrent.Callable;
+import java.util.regex.Pattern;
 
+import com.gmail.berndivader.heewhomee.Console;
+import com.gmail.berndivader.heewhomee.Discord;
+import com.gmail.berndivader.heewhomee.HeeWhooMee;
 import com.gmail.berndivader.heewhomee.Helper;
+
+import io.github.furstenheim.CopyDown;
+import net.dv8tion.jda.api.entities.Message;
 
 public abstract class Worker<T> implements Callable<T> {
 	
-	protected String query;
+	private CopyDown converter;	
+	public String lastQuestion;
+	protected static Pattern pattern=Pattern.compile("@(.*?) ");
 	
+	protected String query;
 	protected String table;
 	protected String filter;
 	protected StringBuilder builder;
 		
-	protected String getResult(String[]temp) {
+	public Worker() {
+		lastQuestion="";
+		converter=new CopyDown();
+	}
+	
+	protected String getSQLResult(String[]temp) {
 		if(temp.length>0) {
 			table=temp[0].trim();
-			filter=temp.length>1?temp[1].trim():"";
+			filter=temp.length>1?temp[1].trim().substring(0,temp[1].length()<HeeWhooMee.config.maxQuestionSize
+					?temp[1].length():HeeWhooMee.config.maxQuestionSize):"";
 			switch(table.charAt(0)) {
 				case 's':
 					table="skills";
@@ -38,6 +54,7 @@ public abstract class Worker<T> implements Callable<T> {
 					filter="Commands";
 					break;
 			}
+			lastQuestion="!".concat(table).concat(" ").concat(filter);
 		}
 		
 		builder=new StringBuilder();
@@ -64,15 +81,32 @@ public abstract class Worker<T> implements Callable<T> {
 							filter="%".concat(filter).concat("%");
 							continue;
 						}
-						builder.append("Sorry, nothing found.");
+						builder.append("Sorry, nothing found. ");
 						break;
 					}
 				}
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			Console.err(e.getMessage(),true);
 		}
 		return builder.toString();
+	}
+	
+	protected String getAiResult(Message message) {
+		String[]parse=pattern.split(message.getContentStripped());
+		String answer="";
+		if(parse.length>1) {
+			String question=parse[1].trim();
+			Console.out(question);
+			if(question.length()>0) {
+				try {
+					answer=converter.convert(Discord.instance.aiSession.think(question));
+				} catch (Exception e) {
+					Console.err(e.getMessage(),true);
+				}
+			}
+		}
+		return answer;
 	}
 	
 	private void matchMore(ResultSet result, int hits) throws SQLException {
@@ -88,10 +122,10 @@ public abstract class Worker<T> implements Callable<T> {
 		if (result.next()) {
 			builder.append("Here we go:\n```Markdown\n#").append(result.getString("name")).append("\n#");
 			if (table.equals("help")) {
-				builder.append(result.getString("syntax"));
+				builder.append(result.getString("syntax").concat("```\n"));
 			} else {
 				builder.append("[Syntax:](").append(result.getString("syntax")).append(")\n\nUsage:\n======\n").append(result.getString("description"))
-					.append("\n[Dependings:](").append(result.getString("addon")).append(")```");
+					.append("\n[Dependings:](").append(result.getString("addon")).append(")```\n");
 			}
 		}
 	}

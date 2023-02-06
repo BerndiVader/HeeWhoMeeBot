@@ -13,7 +13,7 @@ configurations {
 }
 
 dependencies {
-	implemented 'org.jsoup:jsoup:+'
+	implemented 'io.github.furstenheim:copy_down:1.0'
 	implemented 'com.google.code.gson:gson:+'
     implemented 'mysql:mysql-connector-java:8.0.15'
     implemented ("net.dv8tion:JDA:+") {

@@ -14,6 +14,7 @@ public class ConfigFile {
 	private static Gson gson;
 	public String token="discordtoken";
 	public int discordMaxReconnect=5;
+	public int maxQuestionSize=100;
 	public String pandoraId="pandora_bot_id_if_used";
 	public String sqlDriver="com.mysql.cj.jdbc.Driver";
 	public String dbServer="your.sqlserver.name";
@@ -32,6 +33,7 @@ public class ConfigFile {
 	public static void save() throws IOException {
 		try(FileWriter writer=new FileWriter(NAME)) {
 			gson.toJson(HeeWhooMee.config,writer);
+			
 		}
 	}
 	
