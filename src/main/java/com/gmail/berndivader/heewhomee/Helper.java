@@ -25,7 +25,7 @@ public class Helper {
 	private static StringBuilder conBuilder;
 	
 	static {
-		scheduler=Executors.newSingleThreadScheduledExecutor();
+		scheduler=Executors.newScheduledThreadPool(2);
 		executor=Executors.newCachedThreadPool();
 		conBuilder=new StringBuilder();
 	}

@@ -15,6 +15,7 @@ public class ConfigFile {
 	public String token="discordtoken";
 	public int discordMaxReconnect=5;
 	public int maxQuestionSize=100;
+	public long msgCooldownMilli=5000L;
 	public String pandoraId="pandora_bot_id_if_used";
 	public String sqlDriver="com.mysql.cj.jdbc.Driver";
 	public String dbServer="your.sqlserver.name";

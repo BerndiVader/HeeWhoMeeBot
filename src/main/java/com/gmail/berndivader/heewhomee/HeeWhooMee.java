@@ -12,7 +12,6 @@ public class HeeWhooMee {
 	
 	public static String token;
 	public static ConfigFile config;
-	public static Console console;
 	public static DBSTATUS dbStatus;
 	public static boolean autoConnect=false, quit=false;
 	
@@ -21,7 +20,8 @@ public class HeeWhooMee {
 		ConfigFile.Init();		
 		args(args);
 		dbStatus=Helper.testDatabaseConnection();
-		console=new Console();
+		new Console();
+		new Cooldowner();
 		
 		if(dbStatus!=DBSTATUS.OK) {
 			Console.err("There is a problem connecting to the sql server. Error: ".concat(dbStatus.name()));

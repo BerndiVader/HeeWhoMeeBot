@@ -7,8 +7,11 @@ import com.gmail.berndivader.heewhomee.consolecommand.Command;
 
 public class Console implements Runnable {
 	
+	public Console instance;
+	
 	private static Scanner keyboard=new Scanner(System.in);
 	public Console() {
+		instance=this;
 		Helper.scheduler.scheduleAtFixedRate(this, 5, 5, TimeUnit.MILLISECONDS);
 	}
 
