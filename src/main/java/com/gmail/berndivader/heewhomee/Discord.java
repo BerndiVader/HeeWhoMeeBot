@@ -62,12 +62,14 @@ public class Discord {
 		@Override
 		public void onMessageReceived(MessageReceivedEvent event) {
 			Message message=event.getMessage();
-			String content=message.getContentRaw();
+			String content=message.getContentStripped();
 			char test=content.charAt(0);
-			if(test=='!'&&content.length()>1) {
-				Helper.executor.submit(new DiscordRequest(message,false));
-			} else if(test=='@'&&message.getMentions().getUsers().contains(selfUser)) {
-				Helper.executor.submit(new DiscordRequest(message,true));
+			int len=content.length();
+			if((test=='!'&&len>1)||(test=='@'&&message.getMentions().getUsers().contains(selfUser))) {
+				if(len>HeeWhooMee.config.maxQuestionSize) {
+					content=content.substring(0,HeeWhooMee.config.maxQuestionSize);
+				}
+				Helper.executor.submit(new DiscordRequest(message,content,test=='@'));
 			}
 		}
 		

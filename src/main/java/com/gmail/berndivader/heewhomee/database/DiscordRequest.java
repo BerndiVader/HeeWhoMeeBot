@@ -11,23 +11,25 @@ public class DiscordRequest extends Worker<Void> {
 	private static int size=1900;
 	private final Message message;
 	private final boolean bot;
+	private String content;
 			
-	public DiscordRequest(Message m,boolean bot) {
+	public DiscordRequest(Message m,String content,boolean bot) {
 		super();
 		message=m;
 		this.bot=bot;
+		this.content=content;
 	}
 
 	@Override
 	public Void call() throws Exception {
 		ArrayList<String>messages=new ArrayList<>();
 		if(!bot) {
-			String context=getSQLResult(message.getContentRaw().substring(1).trim().toLowerCase().split(" ",2));
+			String context=getSQLResult(content.substring(1).toLowerCase().split(" ",2));
 			if(context.length()>size) {
 				while (context.length()>size) {
 					messages.add(context.substring(0, size).concat("```"));
 					context=context.substring(size, context.length());
-					context="```Markdown\n"+context.trim();
+					context="```Markdown\n"+context;
 				}
 			}
 			messages.add(context.concat("More info? Try *!help*"));	
@@ -37,7 +39,7 @@ public class DiscordRequest extends Worker<Void> {
 			Discord.setActivity(lastQuestion);
 			
 		} else if(Discord.instance.aiSession.useable) {
-			String answer=getAiResult(message);
+			String answer=getAiResult(content);
 			if(!answer.isEmpty()) {
 				message.reply(answer).submit();
 			}

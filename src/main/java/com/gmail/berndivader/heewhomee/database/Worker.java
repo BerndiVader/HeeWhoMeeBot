@@ -13,12 +13,12 @@ import com.gmail.berndivader.heewhomee.HeeWhooMee;
 import com.gmail.berndivader.heewhomee.Helper;
 
 import io.github.furstenheim.CopyDown;
-import net.dv8tion.jda.api.entities.Message;
 
 public abstract class Worker<T> implements Callable<T> {
 	
 	private CopyDown converter;	
 	public String lastQuestion;
+	
 	protected static Pattern pattern=Pattern.compile("@(.*?) ");
 	
 	protected String query;
@@ -92,12 +92,11 @@ public abstract class Worker<T> implements Callable<T> {
 		return builder.toString();
 	}
 	
-	protected String getAiResult(Message message) {
-		String[]parse=pattern.split(message.getContentStripped());
+	protected String getAiResult(String contentRaw) {
+		String[]parse=pattern.split(contentRaw.trim());
 		String answer="";
 		if(parse.length>1) {
 			String question=parse[1].trim();
-			Console.out(question);
 			if(question.length()>0) {
 				try {
 					answer=converter.convert(Discord.instance.aiSession.think(question));
