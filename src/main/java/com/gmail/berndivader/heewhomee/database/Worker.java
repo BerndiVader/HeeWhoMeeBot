@@ -51,7 +51,7 @@ public abstract class Worker<T> implements Callable<T> {
 					break;
 				default:
 					table="help";
-					filter="Commands";
+					filter=filter.isEmpty()||filter.charAt(0)!='d'?"Commands":"Downloads";
 					break;
 			}
 			lastQuestion="!".concat(table).concat(" ").concat(filter);
