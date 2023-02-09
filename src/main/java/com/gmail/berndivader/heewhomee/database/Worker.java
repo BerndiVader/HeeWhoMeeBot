@@ -49,6 +49,9 @@ public abstract class Worker<T> implements Callable<T> {
 				case 'g':
 					table="goals";
 					break;
+				case 'p':
+					table="priority";
+					break;
 				default:
 					table="help";
 					filter=filter.isEmpty()||filter.charAt(0)!='d'?"Commands":"Downloads";
