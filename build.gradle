@@ -8,21 +8,21 @@ repositories {
 }
 
 configurations {
-    implemented
-    compile.extendsFrom(implemented)
+    compileClasspath.extendsFrom(supplied)
 }
 
 dependencies {
-	implemented 'io.github.furstenheim:copy_down:1.0'
-	implemented 'com.google.code.gson:gson:+'
-    implemented 'mysql:mysql-connector-java:8.0.15'
-    implemented ("net.dv8tion:JDA:+") {
+	supplied 'io.github.furstenheim:copy_down:1.0'
+	supplied 'com.google.code.gson:gson:+'
+    supplied 'mysql:mysql-connector-java:8.0.15'
+    supplied ("net.dv8tion:JDA:+") {
 		exclude module: 'opus-java'
 	}
-	implemented 'org.slf4j:slf4j-simple:+' 
+	supplied 'org.slf4j:slf4j-simple:+' 
 }
 
 jar {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     rootSpec.exclude('**/META-INF/*.SF','**/META-INF/*.RSA')
     
     manifest {
@@ -30,6 +30,6 @@ jar {
     }
 
     from {
-        configurations.implemented.asFileTree.files.collect { zipTree(it) }
+        configurations.supplied.asFileTree.files.collect { zipTree(it) }
     }
 }
