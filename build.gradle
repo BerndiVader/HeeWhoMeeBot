@@ -1,7 +1,9 @@
 apply plugin: 'java'
 apply plugin: 'application'
 
-mainClassName = 'com.gmail.berndivader.heewhomee.HeeWhooMee'
+application {
+	mainClass.set("com.gmail.berndivader.heewhomee.HeeWhooMee");
+}
 
 repositories {
 	mavenCentral()
@@ -26,7 +28,7 @@ jar {
     rootSpec.exclude('**/META-INF/*.SF','**/META-INF/*.RSA')
     
     manifest {
-        attributes 'Main-Class': mainClassName
+        attributes 'Main-Class': application.mainClass
     }
 
     from {
