@@ -21,21 +21,18 @@ public class Helper {
 	
 	public static ExecutorService executor;
 	public static ScheduledExecutorService scheduler;
-	
-	private static StringBuilder conBuilder;
-	
+		
 	static {
 		scheduler=Executors.newScheduledThreadPool(2);
 		executor=Executors.newCachedThreadPool();
-		conBuilder=new StringBuilder();
 	}
 	
 	public static Connection getNewDatabaseConnection() throws SQLException {
-		conBuilder.setLength(0);
-		conBuilder.append("jdbc:mysql://".concat(HeeWhooMee.config.dbServer));
-		conBuilder.append(":".concat(Integer.toString(HeeWhooMee.config.dbPort)));
-		conBuilder.append("/".concat(HeeWhooMee.config.dbName));
-		return DriverManager.getConnection(conBuilder.toString(), HeeWhooMee.config.dbUsr, HeeWhooMee.config.dbPwd);
+		StringBuilder builder=new StringBuilder();
+		builder.append("jdbc:mysql://".concat(HeeWhooMee.config.dbServer));
+		builder.append(":".concat(Integer.toString(HeeWhooMee.config.dbPort)));
+		builder.append("/".concat(HeeWhooMee.config.dbName));
+		return DriverManager.getConnection(builder.toString(), HeeWhooMee.config.dbUsr, HeeWhooMee.config.dbPwd);
 	}
 	
 	public static DBSTATUS testDatabaseConnection() {
