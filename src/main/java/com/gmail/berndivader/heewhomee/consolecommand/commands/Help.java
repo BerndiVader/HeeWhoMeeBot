@@ -22,12 +22,7 @@ public class Help extends Command {
 	}
 
 	@Override
-	public void execute(String arg) {
-		if(!arg.isEmpty()&&arg.charAt(0)=='?') {
-			Console.out(usage);
-			return;
-		}
-				
+	protected void command(String arg) {
 		commands.forEach(consumer);
 	}
 

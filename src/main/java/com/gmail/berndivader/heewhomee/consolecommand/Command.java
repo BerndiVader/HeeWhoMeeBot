@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.jar.JarEntry;
 import java.util.jar.JarInputStream;
 
+import com.gmail.berndivader.heewhomee.Console;
 import com.gmail.berndivader.heewhomee.HeeWhooMee;
 import com.gmail.berndivader.heewhomee.annotations.ConsoleCommand;
 
@@ -55,7 +56,7 @@ public abstract class Command {
 						Class<?>clazz=Class.forName(clazzName);
 						ConsoleCommand anno=clazz.getAnnotation(ConsoleCommand.class);
 						if(anno!=null) {
-							commands.put(anno.name(),(Command) clazz.getDeclaredConstructor().newInstance());
+							commands.put(anno.name(),(Command)clazz.getDeclaredConstructor().newInstance());
 						}
 					}
 				}
@@ -75,5 +76,13 @@ public abstract class Command {
 		this.usage=this.getClass().getAnnotation(ConsoleCommand.class).usage();		
 	}
 	
-	public abstract void execute(String args);	
+	public void execute(String args) {
+		if(!args.isEmpty()&&args.charAt(0)=='?') {
+			Console.out(usage);
+			return;
+		}
+		command(args);
+	}
+	
+	protected abstract void command(String args);
 }

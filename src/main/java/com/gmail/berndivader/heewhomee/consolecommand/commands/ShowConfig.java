@@ -9,11 +9,7 @@ import com.gmail.berndivader.heewhomee.annotations.ConsoleCommand;
 public class ShowConfig extends Command {
 
 	@Override
-	public void execute(String args) {
-		if(!args.isEmpty()&&args.charAt(0)=='?') {
-			Console.out(usage);
-			return;
-		}		
+	protected void command(String args) {	
 		Console.out(ConfigFile.toJson());
 		
 	}

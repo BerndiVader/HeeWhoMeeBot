@@ -1,6 +1,5 @@
 package com.gmail.berndivader.heewhomee.consolecommand.commands;
 
-import com.gmail.berndivader.heewhomee.Console;
 import com.gmail.berndivader.heewhomee.Discord;
 import com.gmail.berndivader.heewhomee.HeeWhooMee;
 import com.gmail.berndivader.heewhomee.Helper;
@@ -11,11 +10,8 @@ import com.gmail.berndivader.heewhomee.consolecommand.Command;
 public class Exit extends Command{
 
 	@Override
-	public void execute(String arg) {
-		if(!arg.isEmpty()&&arg.charAt(0)=='?') {
-			Console.out(usage);
-			return;
-		}
+	protected void command(String arg) {
+
 		HeeWhooMee.quit=true;
 		Discord.instance.close();
 		Helper.scheduler.shutdown();

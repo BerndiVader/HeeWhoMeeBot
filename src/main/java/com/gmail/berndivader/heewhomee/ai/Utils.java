@@ -12,7 +12,7 @@ import java.io.*;
 import java.math.BigInteger;
 import java.net.HttpCookie;
 import java.net.HttpURLConnection;
-import java.net.URL;
+import java.net.URI;
 import java.net.URLEncoder;
 import java.security.MessageDigest;
 import java.util.List;
@@ -64,7 +64,7 @@ class Utils {
     }
 
     public static String request(String s1,Map<String,String>m1,Map<String,String>m2,Map<String,String>m3) throws Exception {
-        HttpURLConnection connection=(HttpURLConnection) new URL(s1).openConnection();
+        HttpURLConnection connection=(HttpURLConnection)URI.create(s1).toURL().openConnection();
         connection.setRequestProperty("User-Agent","Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/28.0.1500.95 Safari/537.36");
         if (m1!=null) {
             for (Map.Entry<String,String>header:m1.entrySet()) {

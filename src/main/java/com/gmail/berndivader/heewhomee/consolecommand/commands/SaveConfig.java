@@ -3,7 +3,6 @@ package com.gmail.berndivader.heewhomee.consolecommand.commands;
 import java.io.IOException;
 
 import com.gmail.berndivader.heewhomee.ConfigFile;
-import com.gmail.berndivader.heewhomee.Console;
 import com.gmail.berndivader.heewhomee.consolecommand.Command;
 import com.gmail.berndivader.heewhomee.annotations.ConsoleCommand;
 
@@ -15,11 +14,7 @@ public class SaveConfig extends Command {
 	}
 	
 	@Override
-	public void execute(String args) {
-		if(!args.isEmpty()&&args.charAt(0)=='?') {
-			Console.out(usage);
-			return;
-		}		
+	protected void command(String args) {
 		try {
 			ConfigFile.save();
 		} catch (IOException e) {

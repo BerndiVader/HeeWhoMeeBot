@@ -15,12 +15,7 @@ import com.gmail.berndivader.heewhomee.database.ConsoleRequest;
 public class Query extends Command {
 		
 	@Override
-	public void execute(String arg) {
-		if(arg.isEmpty()||arg.charAt(0)=='?') {
-			Console.out(usage);
-			return;
-		}
-		
+	protected void command(String arg) {		
 		Future<String>future=Helper.executor.submit(new ConsoleRequest(arg));
 		try {
 			String message=future.get(20,TimeUnit.SECONDS);

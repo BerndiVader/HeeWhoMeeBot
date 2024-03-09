@@ -25,11 +25,7 @@ public class Test extends Command {
 	}
 
 	@Override
-	public void execute(String args) {
-		if(!args.isEmpty()&&args.charAt(0)=='?') {
-			Console.out(usage);
-			return;
-		}
+	protected void command(String args) {
 		Console.out("Test connection to mysql database....");
 		Future<DBSTATUS>future=Helper.executor.submit(new TestConnection());
 		try {
