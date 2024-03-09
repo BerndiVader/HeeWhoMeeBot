@@ -34,9 +34,10 @@ public class DiscordRequest extends Worker<Void> {
 						context="```Markdown\n"+context;
 					}
 				}
-				messages.add(context.concat("More info? Try *!help*"));	
-				for(String msg:messages) {
-					message.reply(msg).submit();
+				messages.add(context.concat("More info? Try *!help*"));
+				int size=messages.size();
+				for(int i=0;i<size;i++) {
+					message.reply(messages.get(i)).submit();
 				}
 				Discord.setActivity(lastQuestion);
 				
