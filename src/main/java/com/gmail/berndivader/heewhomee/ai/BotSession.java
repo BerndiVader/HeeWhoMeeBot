@@ -1,17 +1,16 @@
 package com.gmail.berndivader.heewhomee.ai;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.HashMap;
 import java.util.UUID;
 
 import com.gmail.berndivader.heewhomee.Console;
 public class BotSession implements ISession {
 	
 	public boolean useable;
-    final Map<String,String>vars;
+    final HashMap<String,String>vars;
     
     public BotSession(String bid) {
-    	vars=new LinkedHashMap<String, String>();
+    	vars=new HashMap<String, String>();
     	
     	vars.put("botid",bid);
     	vars.put("custid",UUID.randomUUID().toString());
@@ -32,16 +31,13 @@ public class BotSession implements ISession {
     @Override
     public Thought think(Thought thought) throws Exception {
     	vars.put("input",thought.getText());
-        String text=Utils.request("https://www.pandorabots.com/pandora/talk-xml",null,null,vars);
-        Thought t=new Thought();
-        t.setText(Utils.xPathSearch(text,"//result/that/text()"));
-        return t;
+        String text=Utils.request("https://www.pandorabots.com/pandora/talk-xml",vars);
+        return new Thought(Utils.xPathSearch(text,"//result/that/text()"));
     }
 
     @Override
     public String think(String text) throws Exception {
-    	Thought thought=new Thought();
-    	thought.setText(text);
+    	Thought thought=new Thought(text);
         return think(thought).getText();
     }
     
