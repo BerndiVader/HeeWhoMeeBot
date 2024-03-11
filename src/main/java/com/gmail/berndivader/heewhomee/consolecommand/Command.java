@@ -20,7 +20,7 @@ public abstract class Command {
 	
 	private final static String PACKAGE_NAME="com/gmail/berndivader/heewhomee/consolecommand/commands";
 	private static String fileName;
-	protected static HashMap<String,Command>commands;
+	protected static HashMap<String,Class<Command>>commands;
 	
 	static {
 		try {
@@ -44,6 +44,7 @@ public abstract class Command {
 		
 	}
 	
+	@SuppressWarnings("unchecked")
 	private static void loadClasses() throws FileNotFoundException, IOException, ClassNotFoundException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
 		commands=new HashMap<>();
 		try(JarInputStream jarStream=new JarInputStream(new FileInputStream(fileName))) {
@@ -56,7 +57,7 @@ public abstract class Command {
 						Class<?>clazz=Class.forName(clazzName);
 						ConsoleCommand anno=clazz.getAnnotation(ConsoleCommand.class);
 						if(anno!=null) {
-							commands.put(anno.name(),(Command)clazz.getDeclaredConstructor().newInstance());
+							commands.put(anno.name(),(Class<Command>)clazz);
 						}
 					}
 				}
@@ -64,7 +65,7 @@ public abstract class Command {
 		}
 	}
 	
-	public static Command getCommand(String name) {
+	public static Class<Command> getCommand(String name) {
 		return commands.get(name);
 	}
 	

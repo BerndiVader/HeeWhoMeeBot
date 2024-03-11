@@ -1,5 +1,6 @@
 package com.gmail.berndivader.heewhomee;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
@@ -25,7 +26,13 @@ public class Console implements Runnable {
         	if(args.length==2) {
         		arg=args[1];
         	}
-        	Command command=Command.getCommand(cmd);
+        	Command command=null;
+			try {
+				command=Command.getCommand(cmd).getDeclaredConstructor().newInstance();
+			} catch (InstantiationException | IllegalAccessException | IllegalArgumentException
+					| InvocationTargetException | NoSuchMethodException | SecurityException e) {
+				e.printStackTrace();
+			}
         	if(command!=null) {
             	command.execute(arg);
         	} else {

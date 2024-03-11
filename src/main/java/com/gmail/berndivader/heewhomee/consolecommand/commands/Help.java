@@ -9,14 +9,15 @@ import com.gmail.berndivader.heewhomee.consolecommand.Command;
 @ConsoleCommand(name=".help",usage="show all cli commands")
 public class Help extends Command {
 	
-	private BiConsumer<String,Command>consumer;
+	private BiConsumer<String,Class<Command>>consumer;
 	
 	public Help() {
-		consumer=new BiConsumer<String, Command>() {
+		consumer=new BiConsumer<String,Class<Command>>() {
 			
 			@Override
-			public void accept(String name, Command command) {
-				Console.out(name.concat(": ").concat(command.usage));
+			public void accept(String name, Class<Command>clazz) {
+				ConsoleCommand anno=clazz.getAnnotation(ConsoleCommand.class);
+				Console.out(name.concat(": ").concat(anno.usage()));
 			}
 		};
 	}
