@@ -68,6 +68,9 @@ public abstract class Command {
 	public static Class<Command> getCommand(String name) {
 		return commands.get(name);
 	}
+	public static boolean hasCommand(String name) {
+		return commands.containsKey(name);
+	}
 	
 	public final String usage;
 	public final String name;

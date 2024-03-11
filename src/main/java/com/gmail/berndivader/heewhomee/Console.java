@@ -22,6 +22,10 @@ public class Console implements Runnable {
         if(input!=null&&!input.isEmpty()) {
         	String[]args=input.split(" ",2);
         	String cmd=args[0];
+        	if(!Command.hasCommand(cmd)) {
+        		err("UNKNOWN COMMAND: ".concat(input));
+        		return;
+        	}
         	String arg="";
         	if(args.length==2) {
         		arg=args[1];
