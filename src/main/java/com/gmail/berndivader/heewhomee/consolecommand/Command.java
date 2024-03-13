@@ -1,10 +1,8 @@
 package com.gmail.berndivader.heewhomee.consolecommand;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.lang.reflect.InvocationTargetException;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
@@ -23,6 +21,7 @@ public abstract class Command {
 	protected static HashMap<String,Class<Command>>commands;
 	
 	static {
+		
 		try {
 			fileName = URLDecoder.decode(
 					HeeWhooMee.class.getProtectionDomain().getCodeSource().getLocation().getPath(),
@@ -35,17 +34,14 @@ public abstract class Command {
 			} catch (UnsupportedEncodingException e1) {
 				e1.printStackTrace();
 			}
+		} finally {
+			loadConsoleCommands();
 		}
-		try {
-			loadClasses();
-		} catch (ClassNotFoundException | IOException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e) {
-			e.printStackTrace();
-		}
-		
+
 	}
-	
+		
 	@SuppressWarnings("unchecked")
-	private static void loadClasses() throws FileNotFoundException, IOException, ClassNotFoundException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
+	private static void loadConsoleCommands() {
 		commands=new HashMap<>();
 		try(JarInputStream jarStream=new JarInputStream(new FileInputStream(fileName))) {
 			while(jarStream.available()==1) {
@@ -54,14 +50,20 @@ public abstract class Command {
 					String clazzName=entry.getName();
 					if(clazzName.endsWith(".class")&&clazzName.startsWith(PACKAGE_NAME)) {
 						clazzName=clazzName.substring(0,clazzName.length()-6).replace("/",".");
-						Class<?>clazz=Class.forName(clazzName);
-						ConsoleCommand anno=clazz.getAnnotation(ConsoleCommand.class);
-						if(anno!=null) {
-							commands.put(anno.name(),(Class<Command>)clazz);
+						try {
+							Class<?>clazz=Class.forName(clazzName);
+							ConsoleCommand annotation=clazz.getAnnotation(ConsoleCommand.class);
+							if(annotation!=null) {
+								commands.put(annotation.name(),(Class<Command>)clazz);
+							}
+						} catch (ClassNotFoundException e) {
+							Console.err("ERROR: No class found for command: ".concat(clazzName),e);
 						}
 					}
 				}
 			}
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 	
