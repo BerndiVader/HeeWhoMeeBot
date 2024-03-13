@@ -23,7 +23,7 @@ public class BotSession implements ISession {
 			think("ping");
 			useable=true;
 		} catch (Exception e) {
-			Console.err(e.getMessage(),true);
+			Console.err(e.getMessage(),true,e);
 			useable=false;
 		}
     }

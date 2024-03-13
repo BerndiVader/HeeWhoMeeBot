@@ -90,7 +90,7 @@ public abstract class Worker<T> implements Callable<T> {
 				}
 			}
 		} catch (SQLException e) {
-			Console.err(e.getMessage(),true);
+			Console.err(e.getMessage(),true,e);
 		}
 		return builder.toString();
 	}
@@ -104,7 +104,7 @@ public abstract class Worker<T> implements Callable<T> {
 				try {
 					answer=converter.convert(Discord.instance.aiSession.think(question));
 				} catch (Exception e) {
-					Console.err(e.getMessage(),true);
+					Console.err(e.getMessage(),true,e);
 				}
 			}
 		}

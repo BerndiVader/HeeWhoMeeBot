@@ -19,28 +19,23 @@ public class Console implements Runnable {
 		prompt();
 		String input = keyboard.nextLine();
         
-        if(input!=null&&!input.isEmpty()) {
+        if(!input.isBlank()&&input.startsWith(".")) {
         	String[]args=input.split(" ",2);
         	String cmd=args[0];
         	if(!Command.hasCommand(cmd)) {
-        		err("UNKNOWN COMMAND: ".concat(input));
+        		err("UNKNOWN COMMAND: ".concat(input),null);
         		return;
         	}
         	String arg="";
         	if(args.length==2) {
         		arg=args[1];
         	}
-        	Command command=null;
 			try {
-				command=Command.getCommand(cmd).getDeclaredConstructor().newInstance();
+				Command command=Command.getCommand(cmd).getDeclaredConstructor().newInstance();
+            	command.execute(arg);
 			} catch (InstantiationException | IllegalAccessException | IllegalArgumentException
 					| InvocationTargetException | NoSuchMethodException | SecurityException e) {
-				e.printStackTrace();
-			}
-        	if(command!=null) {
-            	command.execute(arg);
-        	} else {
-        		err("UNKNOWN COMMAND: ".concat(input));
+        		err("ERROR with CMD: ".concat(cmd.concat(" - with message:")).concat(e.getMessage()),e);
         	}
         }
 	}
@@ -50,8 +45,8 @@ public class Console implements Runnable {
 		
 	}
 	
-	public static void err(String output) {
-		err(output,false);
+	public static void err(String output,Exception e) {
+		err(output,false,e);
 	}
 	
 	public static void out(String output,boolean prompt) {
@@ -63,9 +58,12 @@ public class Console implements Runnable {
 		}
 	}
 	
-	public static void err(String output,boolean prompt) {
+	public static void err(String output,boolean prompt,Exception e) {
 		if(output!=null) {
 			System.err.println(output);
+		}
+		if(HeeWhooMee.debug&&e!=null) {
+			e.printStackTrace();
 		}
 		if(prompt) {
 			prompt();

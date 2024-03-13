@@ -61,7 +61,7 @@ public class AskAi extends Command {
 		try {
 			answer=converter.convert(botSession.think(contentRaw));
 		} catch (Exception e) {
-			Console.err(e.getMessage(),true);
+			Console.err(e.getMessage(),true,e);
 		}
 		return answer;
 	}

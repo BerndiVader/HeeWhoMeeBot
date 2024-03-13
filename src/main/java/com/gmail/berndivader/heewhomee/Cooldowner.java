@@ -11,7 +11,7 @@ public class Cooldowner implements Runnable {
 	public Cooldowner() {
 		questers=new ConcurrentHashMap<Long,Long>();
 		instance=this;
-		Helper.scheduler.scheduleAtFixedRate(this,0L,5L,TimeUnit.SECONDS);
+		Helper.scheduler.scheduleAtFixedRate(this,0L,1L,TimeUnit.SECONDS);
 	}
 
 	@Override
