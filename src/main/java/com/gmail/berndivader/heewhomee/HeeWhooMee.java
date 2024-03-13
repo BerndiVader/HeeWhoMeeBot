@@ -12,7 +12,6 @@ public class HeeWhooMee {
 	
 	public static String token;
 	public static ConfigFile config;
-	public static DBSTATUS dbStatus;
 	public static boolean autoConnect=false, quit=false, debug=false;
 	
 	public static void main(String[] args) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, IOException {
@@ -20,13 +19,12 @@ public class HeeWhooMee {
 		config=new ConfigFile();
 		ConfigFile.Init();
 
-		args(args);
-		
-		dbStatus=Helper.testDatabaseConnection();
+		processArgs(args);
 		
 		new Console();
 		new Cooldowner();
 		
+		DBSTATUS dbStatus=Helper.testDatabaseConnection();
 		if(dbStatus!=DBSTATUS.OK) {
 			Console.err("There is a problem connecting to the sql server. Error: ".concat(dbStatus.name()),null);
 		}
@@ -34,18 +32,20 @@ public class HeeWhooMee {
 		Discord.createNewDiscordSession();
 	}
 	
-	private static void args(String[]args) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+	private static void processArgs(String[]args) {
 		Method[]methods=HeeWhooMee.class.getDeclaredMethods();
 		HashMap<String,Method>commands=new HashMap<>();
-		for(Method m:methods) {
-			if(m.getAnnotation(Arg.class)!=null) {
-				commands.put(m.getName(),m);
+		for(int i=0;i<methods.length;i++) {
+			Method method=methods[i];
+			if(method.getDeclaredAnnotation(Arg.class)!=null) {
+				commands.put(method.getName(),method);
 			}
 		}
 		for(int i=0;i<args.length;i++) {
 			if(!args[i].isEmpty()&&args[i].charAt(0)=='-') {
-				String cmd=args[i].substring(1);
-				if(commands.containsKey(cmd)) {
+				String arg=args[i].substring(1);
+				
+				if(commands.containsKey(arg)) {
 					int j;
 					for(j=i+1;j<args.length;j++) {
 						if(args[j].charAt(0)=='-') {
@@ -53,18 +53,24 @@ public class HeeWhooMee {
 						}
 					}
 					j-=i+1;
-					String[]params=new String[j];
+					Object[]params=new String[j];
 					System.arraycopy(args, i+1, params, 0, j);
-					commands.get(cmd).invoke(null,new Object[] {params});
+					
+					Method method=commands.get(arg);
+					try {
+						method.invoke(null,params);
+					} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+						Console.err("ERROR while processing argument: ".concat(arg),e);
+					}
 				} else {
-					Console.err("UNKNOWN COMMAND: ".concat(cmd),null);
+					Console.err("UNKNOWN argument: ".concat(arg),null);
 				}
 			}
 		}
 	}
 	
 	@Arg
-	static void token(String...params) {
+	private static void token(String...params) {
 		if(params.length>0) {
 			token=params[0];
 			Console.out("Token set to: ".concat(token));
@@ -74,7 +80,7 @@ public class HeeWhooMee {
 	}
 	
 	@Arg
-	static void config(String...params) {
+	private static void config(String...params) {
 		if(params.length>0) {
 			
 		} else {
@@ -83,12 +89,12 @@ public class HeeWhooMee {
 	}
 	
 	@Arg
-	static void auto(String...params) {
+	private static void auto(String...params) {
 		autoConnect=true;
 	}
 	
 	@Arg
-	static void debug(String...params) {
+	private static void debug(String...params) {
 		debug=true;
 	}
 
