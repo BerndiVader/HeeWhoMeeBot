@@ -34,18 +34,18 @@ public class HeeWhooMee {
 	
 	private static void processArgs(String[]args) {
 		Method[]methods=HeeWhooMee.class.getDeclaredMethods();
-		HashMap<String,Method>commands=new HashMap<>();
+		HashMap<String,Method>arguments=new HashMap<>();
 		for(int i=0;i<methods.length;i++) {
 			Method method=methods[i];
 			if(method.getDeclaredAnnotation(Arg.class)!=null) {
-				commands.put(method.getName(),method);
+				arguments.put(method.getName(),method);
 			}
 		}
 		for(int i=0;i<args.length;i++) {
-			if(!args[i].isEmpty()&&args[i].charAt(0)=='-') {
+			if(!args[i].isBlank()&&args[i].charAt(0)=='-') {
 				String arg=args[i].substring(1);
 				
-				if(commands.containsKey(arg)) {
+				if(arguments.containsKey(arg)) {
 					int j;
 					for(j=i+1;j<args.length;j++) {
 						if(args[j].charAt(0)=='-') {
@@ -56,7 +56,7 @@ public class HeeWhooMee {
 					Object[]params=new String[j];
 					System.arraycopy(args, i+1, params, 0, j);
 					
-					Method method=commands.get(arg);
+					Method method=arguments.get(arg);
 					try {
 						method.invoke(null,params);
 					} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
@@ -69,7 +69,7 @@ public class HeeWhooMee {
 		}
 	}
 	
-	@Arg
+	@Arg(name="t,token",usage="Valid Discord token.")
 	private static void token(String...params) {
 		if(params.length>0) {
 			token=params[0];
@@ -79,7 +79,7 @@ public class HeeWhooMee {
 		}
 	}
 	
-	@Arg
+	@Arg(name="c,config",usage="")
 	private static void config(String...params) {
 		if(params.length>0) {
 			
@@ -88,12 +88,12 @@ public class HeeWhooMee {
 		}
 	}
 	
-	@Arg
+	@Arg(name="a,auto",usage="")
 	private static void auto(String...params) {
 		autoConnect=true;
 	}
 	
-	@Arg
+	@Arg(name="d,debug",usage="")
 	private static void debug(String...params) {
 		debug=true;
 	}
