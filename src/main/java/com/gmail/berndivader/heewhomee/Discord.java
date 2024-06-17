@@ -22,7 +22,7 @@ import net.dv8tion.jda.api.requests.GatewayIntent;
 public class Discord {
 	
 	public static Discord instance;
-	public static boolean connected=false;
+	private static boolean connected=false;
 	private static int connectRetries=0;
 	
 	public BotSession aiSession;
@@ -63,6 +63,7 @@ public class Discord {
 		public void onMessageReceived(MessageReceivedEvent event) {
 			Message message=event.getMessage();
 			String content=message.getContentStripped();
+			if(content.isEmpty()) return;
 			char test=content.charAt(0);
 			int len=content.length();
 			if((test=='!'&&len>1)||(test=='@'&&message.getMentions().getUsers().contains(selfUser))) {
