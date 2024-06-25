@@ -46,7 +46,8 @@ public class Helper {
 				
 		if(status==DBSTATUS.OK) {
 			try(Connection connection=getNewDatabaseConnection()) {
-				try(PreparedStatement statement=connection.prepareStatement("SHOW DATABASES LIKE'".concat(HeeWhooMee.config.dbName).concat("';"))) {
+				try(PreparedStatement statement=connection.prepareStatement("SHOW DATABASES LIKE'".concat(HeeWhooMee.config.dbName).concat("';")
+						,ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_READ_ONLY)) {
 					try(ResultSet result=statement.executeQuery()) {
 						result.first();
 						if(result.getRow()==0) {

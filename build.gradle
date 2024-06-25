@@ -22,7 +22,7 @@ configurations {
 dependencies {
 	supplied 'io.github.furstenheim:copy_down:1.0'
 	supplied 'com.google.code.gson:gson:+'
-    supplied 'mysql:mysql-connector-java:8.0.15'
+    supplied 'mysql:mysql-connector-java:+'
     supplied ("net.dv8tion:JDA:+") {
 		exclude module: 'opus-java'
 	}

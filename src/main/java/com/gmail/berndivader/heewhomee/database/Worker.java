@@ -64,10 +64,9 @@ public abstract class Worker<T> implements Callable<T> {
 		
 		try(Connection connection=Helper.getNewDatabaseConnection()) {
 			boolean secondRun=false;
-
 			while(true) {
-				String sql="select * from ".concat(table).concat(" where name like '").concat(filter).concat("' order by name ASC;");
-				try(PreparedStatement statement=connection.prepareStatement(sql)) {
+				String sql="select * from "+table+" where name like '"+filter+"' order by name ASC";
+				try(PreparedStatement statement=connection.prepareStatement(sql,ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_READ_ONLY)) {
 					try(ResultSet result=statement.executeQuery()) {
 						int hits=0;
 						if(result.last()) {
